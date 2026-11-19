@@ -138,7 +138,7 @@ export default function LibraryPage() {
           ← {t.back}
         </Link>
 
-        <div className="mt-3 flex flex-wrap items-end gap-4">
+        <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-4">
           <div className="min-w-0 flex-1">
             {isAll ? (
               <h1 className="text-2xl font-bold">{t.allVideos}</h1>
@@ -188,7 +188,7 @@ export default function LibraryPage() {
         </div>
 
         {/* Bulk toolbar */}
-        <div className="sticky top-[57px] z-20 mt-4 flex flex-wrap items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-950/95 px-3 py-2 backdrop-blur">
+        <div className="sticky top-[57px] z-20 sm:top-[61px] mt-4 flex flex-wrap items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-950/95 px-3 py-2 backdrop-blur">
           <button onClick={() => setSelected(new Set(videos.map((v) => v.id)))} className="rounded-lg bg-zinc-800 px-3 py-1.5 text-sm hover:bg-zinc-700">
             {t.selectAll}
           </button>

@@ -96,6 +96,18 @@ const en = {
   play: "Play",
   confirmDeleteMany: "Delete the selected videos from your archive and every library?",
   done: "Done",
+  paste: "Paste",
+  pasteFailed: "Couldn't read the clipboard — paste the link manually.",
+  menu: "Menu",
+  closeSearch: "Close search",
+  shareSaving: "Saving to YouTheater…",
+  shareSaved: "Saved to your archive",
+  shareAlready: "Already in your archive",
+  shareNoLink: "No YouTube link found in what was shared.",
+  shareAddTo: "Add to libraries",
+  shareOpen: "Open in theater",
+  sharePlaylist: "This is a playlist link.",
+  sharePlaylistImport: "Import the playlist",
 };
 
 type Dict = typeof en;
@@ -195,6 +207,18 @@ const ko: Dict = {
   play: "재생",
   confirmDeleteMany: "선택한 영상을 보관함과 모든 라이브러리에서 삭제할까요?",
   done: "완료",
+  paste: "붙여넣기",
+  pasteFailed: "클립보드를 읽을 수 없어요. 링크를 직접 붙여넣으세요.",
+  menu: "메뉴",
+  closeSearch: "검색 닫기",
+  shareSaving: "YouTheater에 저장 중…",
+  shareSaved: "보관함에 저장했어요",
+  shareAlready: "이미 보관함에 있어요",
+  shareNoLink: "공유한 내용에서 유튜브 링크를 찾지 못했어요.",
+  shareAddTo: "라이브러리에 추가",
+  shareOpen: "극장에서 열기",
+  sharePlaylist: "재생목록 링크예요.",
+  sharePlaylistImport: "재생목록 가져오기",
 };
 
 export type Lang = "en" | "ko";

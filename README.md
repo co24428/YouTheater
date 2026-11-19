@@ -14,6 +14,15 @@ Your personal YouTube archive and theater. Save videos by link (title, thumbnail
 - Notes per video, search, English / 한국어.
 - **Passcode gate**: everyone types the same passcode. Leave `APP_PASSCODE` empty to open the site to anyone.
 
+## On your phone
+- **Install it:** open the site, then
+  - **Android (Chrome):** menu ⋮ → *Add to Home screen* / *Install app*.
+  - **iPhone (Safari):** Share → *Add to Home Screen*.
+  It opens full-screen with its own icon.
+- **Save from the YouTube app (Android):** after installing, tap **Share** on any video → **YouTheater**. It saves right away and lets you pick libraries. Sharing a playlist link opens the import page.
+- **iPhone:** iOS doesn't let web apps appear in the Share menu. Copy the link in YouTube, open YouTheater and tap **📋 Paste**. A video link saves in one tap.
+- Long-press a card to drag it into a new order.
+
 ## Setup
 
 ### 1. Supabase

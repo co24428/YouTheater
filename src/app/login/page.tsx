@@ -16,8 +16,8 @@ export default function LoginPage() {
     try {
       await api("/api/login", { method: "POST", body: { passcode } });
       // Full reload so the proxy re-checks the session cookie.
-      // eslint-disable-next-line @next/next/no-location-assign-relative-destination
-      window.location.href = "/";
+      const next = new URLSearchParams(window.location.search).get("next");
+      window.location.href = next && next.startsWith("/") && !next.startsWith("//") ? next : "/";
     } catch {
       setError(t.wrongPasscode);
       setBusy(false);

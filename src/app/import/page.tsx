@@ -30,6 +30,8 @@ export default function ImportPage() {
   const [result, setResult] = useState<Result | null>(null);
 
   useEffect(() => {
+    const pre = new URLSearchParams(window.location.search).get("playlist");
+    if (pre) setPlaylistUrl(pre); // eslint-disable-line react-hooks/set-state-in-effect -- prefill from share link
     api<{ libraries: Library[] }>("/api/libraries").then((r) => setLibraries(r.libraries)).catch(() => {});
     api<{ youtubeApiKey: boolean }>("/api/status").then((s) => setHasKey(s.youtubeApiKey)).catch(() => {});
   }, []);
