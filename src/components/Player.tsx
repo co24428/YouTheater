@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
 import { formatCount, formatDate, formatDuration } from "@/lib/format";
 import { useI18n } from "@/lib/i18n";
@@ -23,6 +23,9 @@ const WIDTH = "max-w-[min(64rem,max(40rem,calc((100vh-380px)*1.7778)))]";
 // Video size when the marks panel sits beside it (wide screens).
 // Leaves room for nav, libraries, strip and the timeline bar so all fit on one screen.
 const VIDEO_W = "max-w-[max(28rem,calc((100vh-410px)*1.7778))]";
+// On wide screens the whole block is exactly video + panel wide, so the panel
+// always sits right against the video's bottom-right corner (no gap on big monitors).
+const BLOCK_W = "lg:max-w-[calc(max(28rem,calc((100vh-410px)*1.7778))+360px)]";
 
 export function Player(props: PlayerProps) {
   const { t } = useI18n();
@@ -61,6 +64,7 @@ function PlayerInner({
   const [marksError, setMarksError] = useState<string | null>(null);
   const [hover, setHover] = useState<number | null>(null);
   const [pinned, setPinned] = useState<number | null>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   // Load marks for this video.
   useEffect(() => {
@@ -100,8 +104,8 @@ function PlayerInner({
 
   const gone = video.status === "unavailable";
   return (
-    <div className="mx-auto grid w-full max-w-[1500px] gap-x-5 gap-y-4 lg:grid-cols-[minmax(0,1fr)_340px]">
-      <div className={`order-1 mx-auto w-full ${VIDEO_W}`}>
+    <div className={`mx-auto grid w-full gap-x-5 gap-y-4 lg:grid-cols-[minmax(0,1fr)_340px] ${BLOCK_W}`}>
+      <div className={`order-1 mx-auto w-full ${VIDEO_W} lg:max-w-none`}>
         <div className="relative aspect-video overflow-hidden rounded-xl bg-black shadow-2xl shadow-black/50">
           {/* YouTube player: cued, not autoplaying. */}
           <div ref={hostRef} className="yt-host absolute inset-0" />
@@ -113,16 +117,18 @@ function PlayerInner({
           marks={marks}
           activeMarkId={focusMark?.id ?? null}
           onHover={setHover}
-          onPick={(s) => {
+          onPick={(s, touch) => {
             const near = markNear(marks, s, duration);
             seek(near ? near.seconds : s);
             setPinned(near ? near.seconds : s);
+            // On phones the panel is below the fold: bring the replies into view after a tap.
+            if (touch) requestAnimationFrame(() => panelRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" }));
           }}
           activeMark={focusMark}
         />
       </div>
 
-      <div className="order-2 flex items-start gap-3 lg:order-3 lg:col-span-2">
+      <div className="order-3 flex items-start gap-3 lg:col-span-2">
         <div className="min-w-0 flex-1">
           <h1 className="text-xl font-semibold leading-snug">
             {video.title || video.youtube_id}
@@ -175,13 +181,14 @@ function PlayerInner({
       </div>
 
       {gone && (
-        <p className="order-2 rounded-lg bg-red-950/50 px-3 py-2 text-sm text-red-200 lg:order-3 lg:col-span-2">
+        <p className="order-3 rounded-lg bg-red-950/50 px-3 py-2 text-sm text-red-200 lg:col-span-2">
           {t.unavailableHint}
         </p>
       )}
 
-      {/* Right bottom, beside the video: marks and replies at the hovered / tapped point. */}
-      <div className="order-3 lg:order-2 lg:self-end">
+      {/* Marks and replies at the hovered / tapped point: right under the bar on phones,
+            beside the video's bottom-right corner on wide screens. */}
+      <div ref={panelRef} className="order-2 scroll-mb-4 lg:self-end">
         <MarkPanel
           marks={marks}
           focusSeconds={focusSeconds}

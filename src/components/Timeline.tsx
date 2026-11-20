@@ -52,7 +52,7 @@ export function Timeline({
   marks: Mark[];
   activeMarkId: string | null;
   onHover: (seconds: number | null) => void;
-  onPick: (seconds: number) => void;
+  onPick: (seconds: number, touch: boolean) => void;
   activeMark?: Mark | null;
 }) {
   const bar = useRef<HTMLDivElement>(null);
@@ -97,7 +97,7 @@ export function Timeline({
         }}
         onPointerUp={(e) => {
           const { s } = toSeconds(e.clientX);
-          onPick(s);
+          onPick(s, e.pointerType !== "mouse");
           if (e.pointerType !== "mouse") {
             setHoverX(null);
             onHover(null);
@@ -139,8 +139,11 @@ export function Timeline({
           <>
             <span className="pointer-events-none absolute bottom-3 top-0 w-px bg-zinc-400/60" style={{ left: `${hoverX * 100}%` }} />
             <div
-              className="pointer-events-none absolute bottom-full z-20 mb-1 w-max max-w-64 -translate-x-1/2 rounded-lg bg-zinc-100 px-2 py-1 text-xs text-zinc-900 shadow-xl"
-              style={{ left: `clamp(${activeMark ? 128 : 24}px, ${hoverX * 100}%, calc(100% - ${activeMark ? 128 : 24}px))` }}
+              className={`pointer-events-none absolute bottom-full z-20 mb-1 -translate-x-1/2 rounded-lg bg-zinc-100 px-2 py-1 text-xs text-zinc-900 shadow-xl ${
+                activeMark ? "w-56" : "w-max"
+              }`}
+              // Keep the bubble inside the bar so it never runs off the screen edge.
+              style={{ left: `clamp(${activeMark ? 112 : 28}px, ${hoverX * 100}%, calc(100% - ${activeMark ? 112 : 28}px))` }}
             >
               <span className="font-mono">{formatDuration(activeMark ? activeMark.seconds : hoverSec)}</span>
               {activeMark && (
