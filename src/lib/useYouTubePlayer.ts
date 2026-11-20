@@ -53,14 +53,25 @@ export function useYouTubePlayer(youtubeId: string | null) {
     let cancelled = false;
     loadApi().then(() => {
       if (cancelled || !hostRef.current || !window.YT) return;
-      const mount = document.createElement("div");
-      hostRef.current.appendChild(mount);
-      player.current = new window.YT.Player(mount, {
-        host: "https://www.youtube-nocookie.com",
-        width: "100%",
-        height: "100%",
-        videoId: pendingId.current ?? undefined,
-        playerVars: { rel: 0, playsinline: 1, modestbranding: 1 },
+      // Build the iframe ourselves so `playsinline=1` is guaranteed to be in its URL.
+      // Without it, iPhone Safari jumps to full screen on play, covering the marks panel.
+      const params = new URLSearchParams({
+        enablejsapi: "1",
+        playsinline: "1",
+        rel: "0",
+        modestbranding: "1",
+        fs: "1",
+        origin: window.location.origin,
+      });
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://www.youtube.com/embed/${pendingId.current ?? ""}?${params}`;
+      iframe.title = "YouTube video player";
+      iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen";
+      iframe.allowFullscreen = true;
+      iframe.setAttribute("playsinline", "");
+      iframe.setAttribute("webkit-playsinline", "");
+      hostRef.current.appendChild(iframe);
+      player.current = new window.YT.Player(iframe, {
         events: {
           onReady: () => {
             ready.current = true;
