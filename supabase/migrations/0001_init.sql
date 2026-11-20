@@ -44,6 +44,12 @@ alter table public.videos         enable row level security;
 alter table public.libraries      enable row level security;
 alter table public.library_videos enable row level security;
 
+-- Newer Supabase projects don't grant table access automatically.
+grant usage on schema public to service_role;
+grant select, insert, update, delete on table
+  public.videos, public.libraries, public.library_videos
+  to service_role;
+
 -- Reorder helpers: pass ids in the new order.
 create or replace function public.reorder_libraries(ids uuid[])
 returns void language sql as $$

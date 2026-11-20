@@ -11,7 +11,7 @@ function Dot({ on }: { on: boolean }) {
 
 export default function SettingsPage() {
   const { t, lang, setLang } = useI18n();
-  const [status, setStatus] = useState<{ youtubeApiKey: boolean; supabase: boolean; passcode: boolean } | null>(null);
+  const [status, setStatus] = useState<{ youtubeApiKey: boolean; supabase: boolean; supabaseWrongKey?: boolean; passcode: boolean } | null>(null);
   const [busy, setBusy] = useState(false);
   const [refresh, setRefresh] = useState<{ checked: number; available: number; unavailable: number } | null>(null);
   const [error, setError] = useState("");
@@ -90,7 +90,7 @@ export default function SettingsPage() {
           {status && (
             <ul className="space-y-1.5 text-sm">
               <li>
-                <Dot on={status.supabase} /> Supabase — {status.supabase ? t.connected : t.missing}
+                <Dot on={status.supabase} /> Supabase — {status.supabaseWrongKey ? t.wrongKey : status.supabase ? t.connected : t.missing}
               </li>
               <li>
                 <Dot on={status.youtubeApiKey} /> YouTube API key — {status.youtubeApiKey ? t.connected : t.missing}

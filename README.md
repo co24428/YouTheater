@@ -28,7 +28,9 @@ Your personal YouTube archive and theater. Save videos by link (title, thumbnail
 ### 1. Supabase
 1. Create a project at https://supabase.com.
 2. Open **SQL Editor**, paste [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql), and run it.
-3. From **Project Settings → API**, copy the **Project URL** and the **service_role** key.
+3. From **Project Settings → API Keys**, copy the **Project URL** and the **service_role** key (shown as **secret** key, `sb_secret_…`, in newer projects). Don't use the anon/publishable key.
+
+> **"permission denied for table videos"?** Run [`supabase/migrations/0002_grants.sql`](supabase/migrations/0002_grants.sql) in the SQL Editor (newer Supabase projects don't grant table access automatically), and make sure `SUPABASE_SERVICE_ROLE_KEY` is the service_role/secret key. **Settings → Setup status** in the app tells you if it's the wrong key.
 
 The app only talks to Supabase from the server with the service-role key. Row Level Security is on with no policies, so the public anon key can't read or write anything.
 
