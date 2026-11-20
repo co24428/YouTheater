@@ -34,6 +34,7 @@ export function Theater() {
   const [current, setCurrent] = useState<Video | null>(null);
   const [wantYoutubeId, setWantYoutubeId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [markCounts, setMarkCounts] = useState<Record<string, number>>({});
 
   const showToast = toast.show;
   const fail = useCallback((e: unknown) => showToast(e instanceof Error ? e.message : t.error, true), [showToast, t.error]);
@@ -52,6 +53,9 @@ export function Theater() {
     setWantYoutubeId(v);
     /* eslint-enable react-hooks/set-state-in-effect */
     loadLibraries().catch(fail);
+    api<Record<string, number>>("/api/marks/counts")
+      .then(setMarkCounts)
+      .catch(() => {}); // marks table may not exist yet
   }, [loadLibraries, fail]);
 
   // Load videos whenever the selected library changes.
@@ -212,6 +216,8 @@ export function Theater() {
     }
   }
 
+  const onMarkCount = useCallback((videoId: string, n: number) => setMarkCounts((c) => ({ ...c, [videoId]: n })), []);
+
   const sortable = libId !== ALL && !search.trim();
 
   return (
@@ -244,8 +250,9 @@ export function Theater() {
         sortable={sortable}
         loading={loading}
         emptyText={search.trim() ? t.noResults : t.noVideos}
+        markCounts={markCounts}
       />
-      <main className="flex-1 px-4 py-6">
+      <main className="flex-1 px-4 pb-8 pt-4">
         <Player
           video={current}
           libraries={libraries}
@@ -254,6 +261,7 @@ export function Theater() {
           onToggleLibrary={toggleLibrary}
           onSaveNote={saveNote}
           onDelete={deleteVideo}
+          onMarkCount={onMarkCount}
         />
       </main>
       {toast.node}

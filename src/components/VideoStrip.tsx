@@ -13,6 +13,7 @@ export function VideoStrip({
   sortable,
   loading,
   emptyText,
+  markCounts,
 }: {
   videos: Video[];
   selectedId: string | null;
@@ -21,6 +22,7 @@ export function VideoStrip({
   sortable: boolean;
   loading: boolean;
   emptyText: string;
+  markCounts?: Record<string, number>;
 }) {
   const { t } = useI18n();
   const scroller = useRef<HTMLDivElement>(null);
@@ -78,7 +80,7 @@ export function VideoStrip({
               {videos.map((v) => (
                 <SortableItem key={v.id} id={v.id} className="w-[200px] shrink-0">
                   <div data-vid={v.id} title={sortable ? t.dragHint : undefined}>
-                    <VideoCard video={v} active={v.id === selectedId} onClick={() => onSelect(v)} />
+                    <VideoCard video={v} active={v.id === selectedId} onClick={() => onSelect(v)} markCount={markCounts?.[v.id]} />
                   </div>
                 </SortableItem>
               ))}

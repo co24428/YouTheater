@@ -3,7 +3,17 @@ import { formatDuration, thumb } from "@/lib/format";
 import { useI18n } from "@/lib/i18n";
 import type { Video } from "@/lib/types";
 
-export function VideoCard({ video, active, onClick }: { video: Video; active?: boolean; onClick?: () => void }) {
+export function VideoCard({
+  video,
+  active,
+  onClick,
+  markCount,
+}: {
+  video: Video;
+  active?: boolean;
+  onClick?: () => void;
+  markCount?: number;
+}) {
   const { t } = useI18n();
   const gone = video.status === "unavailable";
   return (
@@ -27,6 +37,9 @@ export function VideoCard({ video, active, onClick }: { video: Video; active?: b
         <span className="absolute bottom-1 right-1 rounded bg-black/80 px-1.5 py-0.5 font-mono text-[11px]">
           {formatDuration(video.duration_seconds)}
         </span>
+        {!!markCount && (
+          <span className="absolute bottom-1 left-1 rounded bg-black/80 px-1.5 py-0.5 text-[11px]">🔖 {markCount}</span>
+        )}
         {gone && (
           <span className="absolute left-1 top-1 rounded bg-red-900/90 px-1.5 py-0.5 text-[10px] font-medium uppercase">
             {t.unavailable}

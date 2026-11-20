@@ -42,4 +42,21 @@ export interface VideoMeta {
   status: VideoStatus;
 }
 
+export interface MarkReply {
+  id: string;
+  mark_id: string;
+  body: string;
+  created_at: string;
+}
+
+/** A personal mark at a point in a video, with any number of replies. */
+export interface Mark {
+  id: string;
+  video_id: string;
+  seconds: number;
+  label: string;
+  created_at: string;
+  replies: MarkReply[];
+}
+
 export const ALL = "all";

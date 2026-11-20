@@ -11,6 +11,8 @@ Your personal YouTube archive and theater. Save videos by link (title, thumbnail
 - **Import a whole YouTube playlist** (public or unlisted), or paste many links at once (`/import`).
 - **Check all videos** (`/settings`) re-fetches data and flags videos that were deleted or made private. Their saved title and thumbnail stay so you know what they were.
 - **Backup** to JSON or CSV.
+- **Personal marks on a timeline**: under the player is a bar for the whole video with the total length at the bottom right. Add marks ("23:30 — start of favourite Kpop mix") with **+ Mark here** or by clicking the bar. Hover or tap the bar to see that mark and its **replies** (as many as you like) in the panel at the bottom right. Timestamps typed in replies ("best part at 24:10") become links that jump the video.
+- **Activity graph** above the bar: taller where you have more marks, replies and timestamps mentioned in replies.
 - Notes per video, search, English / 한국어.
 - **Passcode gate**: everyone types the same passcode. Leave `APP_PASSCODE` empty to open the site to anyone.
 
@@ -27,7 +29,7 @@ Your personal YouTube archive and theater. Save videos by link (title, thumbnail
 
 ### 1. Supabase
 1. Create a project at https://supabase.com.
-2. Open **SQL Editor**, paste [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql), and run it.
+2. Open **SQL Editor** and run each file in [`supabase/migrations/`](supabase/migrations) in order (`0001`, `0002`, `0003`, …). Each is safe to run again.
 3. From **Project Settings → API Keys**, copy the **Project URL** and the **service_role** key (shown as **secret** key, `sb_secret_…`, in newer projects). Don't use the anon/publishable key.
 
 > **"permission denied for table videos"?** Run [`supabase/migrations/0002_grants.sql`](supabase/migrations/0002_grants.sql) in the SQL Editor (newer Supabase projects don't grant table access automatically), and make sure `SUPABASE_SERVICE_ROLE_KEY` is the service_role/secret key. **Settings → Setup status** in the app tells you if it's the wrong key.

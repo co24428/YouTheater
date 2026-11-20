@@ -1,5 +1,6 @@
 import { handle } from "@/lib/http";
 import { listLibraries, listVideos } from "@/lib/repo";
+import { db } from "@/lib/supabase";
 
 function csvCell(v: unknown) {
   const s = v == null ? "" : String(v);
@@ -19,7 +20,18 @@ export const GET = handle(async (req: Request) => {
         videos: (await listVideos(l.id)).map((v) => v.youtube_id),
       })),
     );
-    const body = JSON.stringify({ exported_at: new Date().toISOString(), libraries: libs, videos }, null, 2);
+    const { data: marks } = await db().from("marks").select("video_id, seconds, label, replies:mark_replies(body, created_at)").order("seconds");
+    const ytId = new Map(videos.map((v) => [v.id, v.youtube_id]));
+    const body = JSON.stringify(
+      {
+        exported_at: new Date().toISOString(),
+        libraries: libs,
+        videos,
+        marks: (marks ?? []).map(({ video_id, ...m }) => ({ youtube_id: ytId.get(video_id), ...m })),
+      },
+      null,
+      2,
+    );
     return new Response(body, {
       headers: {
         "content-type": "application/json",

@@ -26,3 +26,19 @@ export function formatDate(iso: string | null | undefined, locale = "en"): strin
 export function thumb(youtubeId: string, url?: string | null) {
   return url || `https://i.ytimg.com/vi/${youtubeId}/hqdefault.jpg`;
 }
+
+/** "23:30" / "1:02:10" / "90" → seconds. Returns null if it isn't a time. */
+export function parseTimestamp(input: string): number | null {
+  const s = input.trim();
+  if (!/^\d{1,3}(:\d{1,2}){0,2}$/.test(s)) return null;
+  const parts = s.split(":").map(Number);
+  if (parts.slice(1).some((p) => p >= 60)) return null;
+  return parts.reduce((acc, p) => acc * 60 + p, 0);
+}
+
+/** Timestamps written inside free text, e.g. "best part at 24:10". */
+export const TIMESTAMP_IN_TEXT = /\b(?:\d{1,2}:)?\d{1,2}:\d{2}\b/g;
+
+export function timestampsIn(text: string): number[] {
+  return (text.match(TIMESTAMP_IN_TEXT) ?? []).map(parseTimestamp).filter((n): n is number => n != null);
+}
